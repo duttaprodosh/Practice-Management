@@ -1,0 +1,200 @@
+
+{% extends 'base.html' %}
+
+{% block head %}
+
+
+
+{% endblock %}
+
+
+{% block body %}
+
+   <header class="py-1">
+    <!--   <div class="container px-lg-1">
+           <div class="p-4 p-lg-1 bg-light rounded-3 text-center">
+               <div class="m-2 m-lg-1">
+                   <h6 class="display-1" fm-bold>Team Management</h6>
+               </div>
+           </div>
+       </div> -->
+       <div class="container px-lg-5 text-center"> <h5>Practice Management</h5> </div>
+<style>
+th,
+td {
+  border: 1px solid rgb(160 160 160);
+  padding: 8px 10px;
+  text-align: center;
+}
+
+th[scope='col'] {
+  background-color: #505050;
+  color: #fff;
+}
+
+th[scope='row'] {
+  background-color: #d6ecd4;
+}
+
+td {
+  text-align: center;
+}
+
+tr:nth-of-type(even) {
+  background-color: #eee;
+}
+
+table {
+  border-collapse: collapse;
+  border: 2px solid rgb(140 140 140);
+  font-family: sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+
+caption {
+  caption-side: bottom;
+  padding: 10px;
+}
+
+</style>
+   </header>
+
+   <section id="about">
+       <div class="container px-1">
+           <div class="row gx-4 justify-content-center">
+              <div class="col-5">
+
+                  <h4> Practices
+                     <button type="button" class="btn btn-success btn btn-block" data-bs-toggle="modal" data-bs-target="#add_practice">Add Practices</button>
+                  </h4>
+
+<!----##############   Begin : Modal window to Add Practice ######################################################    -->
+                  <div class="modal fade" id="add_practice" aria-labelledby="add_typeLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                          <div class="modal-content">
+                              <div class="modal-header">
+                                  <h5 class="modal-title" id="add_modalLabel"> Add Practice</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <form action="{{ url_for('practices') }}" method="POST" novalidate>
+                                  <div class="modal-body">
+                                        {{ form.hidden_tag()  }}
+                                        <p>
+                                            {{ form.practice_date.label }}:  <br>
+                                            {{ form.practice_date(class='datepicker') }}
+                                       </p>
+                                       <p>
+                                           {{ form.practice_length.label }}: <br>
+                                           {{ form.practice_length }}
+                                      </p>
+                                      <p>
+                                           {{ form.teams.label }}: <br>
+                                           {{ form.teams }}
+                                      </p>
+                                      <p>  {{ form.submit() }} </p>
+                                  </div>
+                                      <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                      </div>
+                              </form>
+
+                          </div>
+
+                      </div>
+
+                  </div>
+<!----##############   End : Modal window to Add Practice ######################################################    -->
+
+                   <table clas="table">
+                       <thead >
+                          <th scope="col">Team Name     </th>
+                          <th scope="col">Practice Date </th>
+                          <th scope="col">Practice Length</th>
+                          <th scope="col">User Action   </th>
+                       </thead>
+                       {% for practice in practices %}
+                       <tr>
+                           <td align="left">{{ practice.team_name }}</td>
+                           <td align="left">{{ practice.practice_date }}</td>
+                           <td align="left">{{ practice.practice_length }}</td>
+                           <td align="left">
+                           <button type="button" class="btn btn-success btn-block"  width="10px" data-bs-toggle="modal" data-bs-target="#update_modal{{practice.practice_id}}">Update</button>
+                           <button type="button" class="btn btn-danger btn-block" data-bs-toggle="modal" data-bs-target="#delete_modal{{practice.practice_id}}">Delete</button>
+
+     <!----##############   Begin : Modal window to Update Practice ######################################################    -->
+                        <div class="modal fade" id="update_modal{{practice.practice_id}}" aria-labelledby="update_modalLabel" aria-hidden="true">
+                         <div class="modal-dialog">
+                          <div class="modal-content">
+                              <div class="modal-header">
+                                  <h5 class="modal-title" id="update_modalLabel"> Update Practice</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <form action="{{url_for('practice_update', practice_id=practice.practice_id) }}" method="POST" novalidate>
+                                  <div class="modal-body">
+
+                                        <p>
+                                            <label for="practice_date">Prctice Date :</label>  <br>
+                                            <input type="date" id="practice_date" name="practice_date" value="{{ practice.practice_date }}">
+                                       </p>
+                                       <p>
+                                            <label for="practice_length">Prctice Length :</label>  <br>
+                                            <input type="text" id="practice_length" name="practice_length" value="{{ practice.practice_length }}">
+                                      </p>
+                                      <p>
+                                            <label for="teams">Teams :</label>  <br>
+                                            <select id="teams" name="teams">
+                                                <option value="{{practice.team_id}}" selected>{{ practice.team_name }}</option>
+                                                {% for team in teams %}
+                                                <option value="{{team.team_id}}">{{ team.team_name }}</option>
+                                                {% endfor %}
+                                            </select>
+
+                                      </p>
+                                  </div>
+                                  <div class="modal-footer">
+                                          <input type="submit" class="btn btn-success" value="Submit">
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                  </div>
+                              </form>
+                          </div>
+                         </div>
+                        </div>
+<!----##############   End : Modal window to Update Practice ######################################################    -->
+
+
+<!----##############   Begin : Modal window to Delete Practice ######################################################    -->
+
+                            <div class="modal fade" id="delete_modal{{practice.practice_id}}" aria-labelledby="delete_modalLabel" aria-hidden="true">
+                             <div class="modal-dialog">
+                              <div class="modal-content">
+                               <div class="modal-header">
+                                  <h5 class="modal-title" id="delete_modalLabel"> Delete Practice</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                               </div>
+
+                               <div class="modal-body">
+
+                                        <p style="color:red; font-size:20px;"> Are You Sure, You want to delete Practice for Team : {{practice.team_name}} Practice Date : {{practice.practice_date}} Practice Length : {{practice.practice_length}}? Confirm !! </p>
+
+                               </div>
+                               <div class="modal-footer">
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                          <form action="{{url_for('practice_delete', practice_id=practice.practice_id) }}" method="POST" novalidate>
+                                              <input type="submit" class="btn btn-primary" value="Delete">
+                                          </form>
+                               </div>
+                          </div>
+                      </div>
+                  </div>
+<!----##############   End : Modal window to Delete Practice ######################################################    -->
+                         </td>
+                       </tr>
+                       {% endfor %}
+                   </table>
+              </div>
+           </div>
+       </div>
+       <br>
+   </section>
+{% endblock %}

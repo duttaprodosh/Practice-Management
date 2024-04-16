@@ -1,0 +1,31 @@
+
+{% extends 'base.html' %}
+
+{% block head %}
+
+
+
+{% endblock %}
+
+
+{% block body %}
+
+   <header class="py-4">
+    <!--   <div class="container px-lg-5 p-4 p-lg-1 bg-light rounded-3 text-center m-4 m-lg-5 ">
+                <h1 class="display-5" fm-bold>Pratice Management</h1>
+       </div>  -->
+   </header>
+
+   <section id="about">
+       <div class="container px-4">
+           <div class="row gx-4 justify-content-center col-lg-10">
+                   <h5>Practice, Practice, Practice</h5>
+                   <p> We want all the teams to show up in a dropdown on the add practice view. We would want the current team to show up on </p>
+                   <p> the updated practice modal. We would want all the practices to be deleted if the team is deleted.</p>
+
+                  <img src="{{ url_for('static', filename='images/stadium.JPG')}}" alt="ABC College Stadium">
+
+           </div>
+       </div>
+   </section>
+{% endblock %}
